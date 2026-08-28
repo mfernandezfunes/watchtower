@@ -12,24 +12,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - name: Set up Go
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v5
         with:
-          go-version: 1.26.x
-      - uses: dominikh/staticcheck-action@ba605356b4b29a60e87ab9404b712f3461e566dc #v1.3.0
+          go-version-file: go.mod
+      - uses: dominikh/staticcheck-action@672a31696676d1592844bf0164b3bbfd855a4d50 #v1.4.1
         with:
-          version: "2023.1.6"
-          install-go: "false" # StaticCheck uses go v1.17 which does not support `any`
+          version: "2026.2.1"
   test:
     name: Test
     strategy:
       fail-fast: false
       matrix:
-        go-version:
-          - 1.26.x
         platform:
           - macos-latest
           - windows-latest
@@ -37,13 +34,13 @@ jobs:
     runs-on: ${{ matrix.platform }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - name: Set up Go
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v5
         with:
-          go-version: 1.26.x
+          go-version-file: go.mod
       - name: Run tests
         run: |
           go test -v -coverprofile coverage.out -covermode atomic ./... 
@@ -56,13 +53,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - name: Set up Go
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v5
         with:
-          go-version: 1.26.x
+          go-version-file: go.mod
       - name: Build
         uses: goreleaser/goreleaser-action@7ec5c2b0c6cdda6e8bbb49444bc797dd33d74dd8 #v3
         with:
