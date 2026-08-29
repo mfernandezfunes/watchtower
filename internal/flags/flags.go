@@ -16,7 +16,10 @@ import (
 )
 
 // DockerAPIMinVersion is the minimum version of the docker api required to
-// use watchtower
+// use watchtower. It is not applied as a default: if DOCKER_API_VERSION/
+// --api-version is left unset, the docker client negotiates the API version
+// with the daemon automatically. It is only used to reject an explicitly
+// pinned version that is too old.
 const DockerAPIMinVersion string = "1.40"
 
 var defaultInterval = int((time.Hour * 24).Seconds())
@@ -420,7 +423,6 @@ func envDuration(key string) time.Duration {
 func SetDefaults() {
 	viper.AutomaticEnv()
 	viper.SetDefault("DOCKER_HOST", "unix:///var/run/docker.sock")
-	viper.SetDefault("DOCKER_API_VERSION", DockerAPIMinVersion)
 	viper.SetDefault("WATCHTOWER_POLL_INTERVAL", defaultInterval)
 	viper.SetDefault("WATCHTOWER_TIMEOUT", time.Second*10)
 	viper.SetDefault("WATCHTOWER_NOTIFICATIONS", []string{})
