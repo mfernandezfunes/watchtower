@@ -53,7 +53,7 @@ jobs:
       - test
       - lint
     permissions:
-      contents: read
+      contents: write
       packages: write
     env:
       CGO_ENABLED: 0
