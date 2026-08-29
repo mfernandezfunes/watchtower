@@ -1,3 +1,11 @@
+release:
+  footer: |
+    ## Docker images
+
+    - `ghcr.io/mfernandezfunes/watchtower:{{ .Tag }}`
+    - `ghcr.io/mfernandezfunes/watchtower:latest`
+
+    See the package page: https://github.com/mfernandezfunes/watchtower/pkgs/container/watchtower
 build:
   main: ./main.go
   binary: watchtower
@@ -9,6 +17,9 @@ build:
     - 386
     - arm
     - arm64
+  ignore:
+    - goos: windows
+      goarch: arm
   ldflags:
     - -s -w -X github.com/containrrr/watchtower/internal/meta.Version={{.Version}}
 archives:
@@ -36,10 +47,8 @@ dockers:
     goarm: ''
     dockerfile: dockerfiles/Dockerfile
     image_templates:
-      - containrrr/watchtower:amd64-{{ .Version }}
-      - containrrr/watchtower:amd64-latest
-      - ghcr.io/containrrr/watchtower:amd64-{{ .Version }}
-      - ghcr.io/containrrr/watchtower:amd64-latest
+      - ghcr.io/mfernandezfunes/watchtower:amd64-{{ .Version }}
+      - ghcr.io/mfernandezfunes/watchtower:amd64-latest
     binaries:
       - watchtower
   - 
@@ -50,10 +59,8 @@ dockers:
     goarm: ''
     dockerfile: dockerfiles/Dockerfile
     image_templates:
-      - containrrr/watchtower:i386-{{ .Version }}
-      - containrrr/watchtower:i386-latest
-      - ghcr.io/containrrr/watchtower:i386-{{ .Version }}
-      - ghcr.io/containrrr/watchtower:i386-latest
+      - ghcr.io/mfernandezfunes/watchtower:i386-{{ .Version }}
+      - ghcr.io/mfernandezfunes/watchtower:i386-latest
     binaries:
       - watchtower
   - 
@@ -64,10 +71,8 @@ dockers:
     goarm: 6
     dockerfile: dockerfiles/Dockerfile
     image_templates:
-      - containrrr/watchtower:armhf-{{ .Version }}
-      - containrrr/watchtower:armhf-latest
-      - ghcr.io/containrrr/watchtower:armhf-{{ .Version }}
-      - ghcr.io/containrrr/watchtower:armhf-latest
+      - ghcr.io/mfernandezfunes/watchtower:armhf-{{ .Version }}
+      - ghcr.io/mfernandezfunes/watchtower:armhf-latest
     binaries:
       - watchtower
   - 
@@ -78,9 +83,7 @@ dockers:
     goarm: ''
     dockerfile: dockerfiles/Dockerfile
     image_templates:
-      - containrrr/watchtower:arm64v8-{{ .Version }}
-      - containrrr/watchtower:arm64v8-latest
-      - ghcr.io/containrrr/watchtower:arm64v8-{{ .Version }}
-      - ghcr.io/containrrr/watchtower:arm64v8-latest
+      - ghcr.io/mfernandezfunes/watchtower:arm64v8-{{ .Version }}
+      - ghcr.io/mfernandezfunes/watchtower:arm64v8-latest
     binaries:
       - watchtower
