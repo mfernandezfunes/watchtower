@@ -5,6 +5,7 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"os"
 	"strings"
 	"time"
 
@@ -13,9 +14,11 @@ import (
 	"github.com/docker/docker/api/types/filters"
 	"github.com/docker/docker/api/types/image"
 	"github.com/docker/docker/api/types/network"
+	"github.com/docker/docker/api/types/versions"
 	sdkClient "github.com/docker/docker/client"
 	log "github.com/sirupsen/logrus"
 
+	"github.com/containrrr/watchtower/internal/flags"
 	"github.com/containrrr/watchtower/pkg/registry"
 	"github.com/containrrr/watchtower/pkg/registry/digest"
 	t "github.com/containrrr/watchtower/pkg/types"
@@ -48,6 +51,20 @@ func NewClient(opts ClientOptions) Client {
 
 	if err != nil {
 		log.Fatalf("Error instantiating Docker client: %s", err)
+	}
+
+	if pinned := os.Getenv("DOCKER_API_VERSION"); pinned != "" {
+		if versions.LessThan(pinned, flags.DockerAPIMinVersion) {
+			log.Fatalf(
+				"DOCKER_API_VERSION %s is too old; watchtower requires at least %s",
+				pinned,
+				flags.DockerAPIMinVersion,
+			)
+		}
+	} else {
+		// Negotiate eagerly so an incompatible daemon is caught at startup
+		// instead of on the first API request.
+		cli.NegotiateAPIVersion(context.Background())
 	}
 
 	return dockerClient{
