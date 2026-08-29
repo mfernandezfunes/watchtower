@@ -67,6 +67,10 @@ jobs:
         uses: actions/setup-go@v6
         with:
           go-version-file: go.mod
+      - name: Enable experimental docker features
+        run: |
+          mkdir -p ~/.docker/ && \
+          echo '{"experimental": "enabled"}' > ~/.docker/config.json
       - name: Login to GHCR
         uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f #v4.6.0
         with:
@@ -80,10 +84,6 @@ jobs:
           args: --debug
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Enable experimental docker features
-        run: |
-          mkdir -p ~/.docker/ && \
-          echo '{"experimental": "enabled"}' > ~/.docker/config.json
       - name: Create manifest for version
         run: |
           export DH_TAG=$(git tag --points-at HEAD | sed 's/^v*//')
